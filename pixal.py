@@ -131,7 +131,7 @@ if color_log:
     buf = BytesIO()
     gradient_fig.savefig(buf, format="png")
     st.download_button("📥 Download Mood Gradient", data=buf.getvalue(),
-                       file_name="pixal_gradient.png", mime="image/png")
+                       file_name="pixal_gradient.png", mime="image/png", key=f"download_{time_filter}")
 
 # ------------------- UI CONTROLS -------------------
 
@@ -173,7 +173,8 @@ if color_log:
         buf = BytesIO()
         gradient_fig.savefig(buf, format="png")
         st.download_button("📥 Download Mood Gradient", data=buf.getvalue(),
-                           file_name="pixal_gradient.png", mime="image/png")
+                   file_name="pixal_gradient.png", mime="image/png", key=f"download_{time_filter}")
+
     else:
         st.info("No entries found for the selected time range.")
 
