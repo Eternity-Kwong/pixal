@@ -44,23 +44,23 @@ def get_resources(emotion):
     resources = {
         "Very Positive 😄": {
             "quote": "Keep shining! ✨",
-            "song": "https://open.spotify.com/track/3KkXRkHbMCARz0aVfEt68P"
+            "song": "https://open.spotify.com/track/7Ee6XgP8EHKDhTMYLIndu9"
         },
         "Positive 🙂": {
             "quote": "You’re doing amazing.",
-            "song": "https://open.spotify.com/track/4uLU6hMCjMI75M1A2tKUQC"
+            "song": "https://open.spotify.com/track/7KXJLrMlgQbGMY8kr6yJlB"
         },
         "Neutral 😐": {
             "quote": "Stillness is powerful.",
-            "song": "https://open.spotify.com/track/2nLtzopw4rPReszdYBJU6h"
+            "song": "https://open.spotify.com/track/6Kfd3XrgqJ0M50O3Z5KN9c"
         },
         "Negative 😕": {
             "quote": "It’s okay to not be okay.",
-            "song": "https://open.spotify.com/track/5yY9lUy8nbvjM1Uyo1Uqoc"
+            "song": "https://open.spotify.com/album/6YgL1xiXpuBsTUK5y1MYuP"
         },
         "Very Negative 😔": {
             "quote": "You’re not alone 💜",
-            "song": "https://open.spotify.com/track/3dYD57lRAUcMHufyqn9GcI"
+            "song": "https://open.spotify.com/track/2el4Mzv6ctmCk0pTco3xTz"
         },
     }
     return resources.get(emotion, {})
