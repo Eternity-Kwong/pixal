@@ -121,63 +121,6 @@ if st.button("Generate Mood Color"):
             st.markdown(f"> 💬 **Quote**: *{resources['quote']}*")
             st.markdown(f"[🎧 Mood Music]({resources['song']})")
 
-# ------------------- SHOW HISTORY -------------------
-if color_log:
-    st.subheader("Your Mood History 🌈")
-    gradient_fig = plot_blended_gradient([c[1] for c in color_log])
-    st.pyplot(gradient_fig)
-
-    # Download button
-    buf = BytesIO()
-    gradient_fig.savefig(buf, format="png")
-    st.download_button("📥 Download Mood Gradient", data=buf.getvalue(),
-                       file_name="pixal_gradient.png", mime="image/png", key=f"download_{time_filter}")
-
-# ------------------- UI CONTROLS -------------------
-
-# Time filter dropdown
-time_filter = st.selectbox("Filter Gradient By:", ["All", "Week", "Month", "Year"])
-
-# Reset button
-if st.button("🔁 Reset Mood Log"):
-    if os.path.exists(DATA_FILE):
-        os.remove(DATA_FILE)
-    st.success("Mood log reset! Refresh the app to start over.")
-    st.stop()
-
-# ------------------- SHOW HISTORY -------------------
-
-if color_log:
-    st.subheader("Your Mood History 🌈")
-
-    # Filter by time
-    filtered_log = []
-    now = datetime.today()
-    for entry in color_log:
-        entry_date = datetime.strptime(entry[0], "%Y-%m-%d")
-        if time_filter == "Week" and (now - entry_date).days <= 7:
-            filtered_log.append(entry)
-        elif time_filter == "Month" and (now - entry_date).days <= 30:
-            filtered_log.append(entry)
-        elif time_filter == "Year" and (now - entry_date).days <= 365:
-            filtered_log.append(entry)
-        elif time_filter == "All":
-            filtered_log = color_log
-            break
-
-    if filtered_log:
-        gradient_fig = plot_blended_gradient([c[1] for c in filtered_log])
-        st.pyplot(gradient_fig)
-
-        # Download button
-        buf = BytesIO()
-        gradient_fig.savefig(buf, format="png")
-        st.download_button("📥 Download Mood Gradient", data=buf.getvalue(),
-                   file_name="pixal_gradient.png", mime="image/png", key=f"download_{time_filter}")
-
-    else:
-        st.info("No entries found for the selected time range.")
-
 # ------------------- FILTERS & RESET -------------------
 st.subheader("History Controls")
 col1, col2 = st.columns([1, 2])
@@ -187,13 +130,16 @@ with col1:
         df = pd.DataFrame(columns=["date", "color", "text"])
         df.to_csv(DATA_FILE, index=False)
         color_log = []
+        st.success("Mood history reset. Refreshing...")
         st.experimental_rerun()
 
 with col2:
     time_filter = st.selectbox("Filter by Time Range", ["All", "Week", "Month", "Year"], index=0)
 
-# ------------------- FILTERED DATA -------------------
+# ------------------- SHOW FILTERED HISTORY -------------------
 if color_log:
+    st.subheader("Your Mood History 🌈")
+
     df = pd.read_csv(DATA_FILE)
     df["date"] = pd.to_datetime(df["date"])
     today_dt = pd.to_datetime(date.today())
@@ -210,13 +156,13 @@ if color_log:
     color_list = filtered_df["color"].tolist()
 
     if color_list:
-        st.subheader("Filtered Mood Gradient 🌈")
         gradient_fig = plot_blended_gradient(color_list)
         st.pyplot(gradient_fig)
 
         buf = BytesIO()
         gradient_fig.savefig(buf, format="png")
         st.download_button("📥 Download Mood Gradient", data=buf.getvalue(),
-                           file_name=f"pixal_gradient_{time_filter.lower()}.png", mime="image/png", key=f"download_{time_filter}")
+                           file_name=f"pixal_gradient_{time_filter.lower()}.png",
+                           mime="image/png", key=f"download_{time_filter.lower()}")
     else:
-        st.info(f"No mood entries found for selected time range: **{time_filter}**.")
+        st.info(f"No mood entries found for: **{time_filter}**.")
