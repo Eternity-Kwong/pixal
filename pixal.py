@@ -1,5 +1,6 @@
 # pixal_2.0.py
 
+from datetime import datetime, timedelta  # Add this at the top with other imports
 import streamlit as st
 import matplotlib.pyplot as plt
 from matplotlib.colors import to_rgb
@@ -131,3 +132,48 @@ if color_log:
     gradient_fig.savefig(buf, format="png")
     st.download_button("📥 Download Mood Gradient", data=buf.getvalue(),
                        file_name="pixal_gradient.png", mime="image/png")
+
+# ------------------- UI CONTROLS -------------------
+
+# Time filter dropdown
+time_filter = st.selectbox("Filter Gradient By:", ["All", "Week", "Month", "Year"])
+
+# Reset button
+if st.button("🔁 Reset Mood Log"):
+    if os.path.exists(DATA_FILE):
+        os.remove(DATA_FILE)
+    st.success("Mood log reset! Refresh the app to start over.")
+    st.stop()
+
+# ------------------- SHOW HISTORY -------------------
+
+if color_log:
+    st.subheader("Your Mood History 🌈")
+
+    # Filter by time
+    filtered_log = []
+    now = datetime.today()
+    for entry in color_log:
+        entry_date = datetime.strptime(entry[0], "%Y-%m-%d")
+        if time_filter == "Week" and (now - entry_date).days <= 7:
+            filtered_log.append(entry)
+        elif time_filter == "Month" and (now - entry_date).days <= 30:
+            filtered_log.append(entry)
+        elif time_filter == "Year" and (now - entry_date).days <= 365:
+            filtered_log.append(entry)
+        elif time_filter == "All":
+            filtered_log = color_log
+            break
+
+    if filtered_log:
+        gradient_fig = plot_blended_gradient([c[1] for c in filtered_log])
+        st.pyplot(gradient_fig)
+
+        # Download button
+        buf = BytesIO()
+        gradient_fig.savefig(buf, format="png")
+        st.download_button("📥 Download Mood Gradient", data=buf.getvalue(),
+                           file_name="pixal_gradient.png", mime="image/png")
+    else:
+        st.info("No entries found for the selected time range.")
+
