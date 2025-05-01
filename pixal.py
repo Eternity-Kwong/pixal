@@ -178,3 +178,45 @@ if color_log:
     else:
         st.info("No entries found for the selected time range.")
 
+# ------------------- FILTERS & RESET -------------------
+st.subheader("History Controls")
+col1, col2 = st.columns([1, 2])
+
+with col1:
+    if st.button("🔄 Reset Mood History"):
+        df = pd.DataFrame(columns=["date", "color", "text"])
+        df.to_csv(DATA_FILE, index=False)
+        color_log = []
+        st.experimental_rerun()
+
+with col2:
+    time_filter = st.selectbox("Filter by Time Range", ["All", "Week", "Month", "Year"], index=0)
+
+# ------------------- FILTERED DATA -------------------
+if color_log:
+    df = pd.read_csv(DATA_FILE)
+    df["date"] = pd.to_datetime(df["date"])
+    today_dt = pd.to_datetime(date.today())
+
+    if time_filter == "Week":
+        filtered_df = df[df["date"] >= today_dt - pd.Timedelta(days=7)]
+    elif time_filter == "Month":
+        filtered_df = df[df["date"] >= today_dt - pd.DateOffset(months=1)]
+    elif time_filter == "Year":
+        filtered_df = df[df["date"] >= today_dt - pd.DateOffset(years=1)]
+    else:
+        filtered_df = df
+
+    color_list = filtered_df["color"].tolist()
+
+    if color_list:
+        st.subheader("Filtered Mood Gradient 🌈")
+        gradient_fig = plot_blended_gradient(color_list)
+        st.pyplot(gradient_fig)
+
+        buf = BytesIO()
+        gradient_fig.savefig(buf, format="png")
+        st.download_button("📥 Download Mood Gradient", data=buf.getvalue(),
+                           file_name=f"pixal_gradient_{time_filter.lower()}.png", mime="image/png", key=f"download_{time_filter}")
+    else:
+        st.info(f"No mood entries found for selected time range: **{time_filter}**.")
