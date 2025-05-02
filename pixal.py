@@ -87,6 +87,16 @@ def plot_blended_gradient(color_list):
     ax.axis("off")
     return fig
 
+# ------------------- USER LOGIN -------------------
+st.sidebar.header("👤 User Login")
+user_id = st.sidebar.text_input("Enter your name or ID to begin:", "")
+
+if not user_id:
+    st.warning("Please enter your user ID to continue.")
+    st.stop()
+
+USER_DATA_FILE = f"{user_id}_mood_log.csv"
+
 # ------------------- LOAD LOG -------------------
 if os.path.exists(USER_DATA_FILE):
     df = pd.read_csv(USER_DATA_FILE)
@@ -98,15 +108,6 @@ else:
 # ------------------- UI -------------------
 st.title("🎨 Pixal 2.0")
 st.subheader("Your mood, visualized as color 🌈")
-
-st.sidebar.header("👤 User Login")
-user_id = st.sidebar.text_input("Enter your name or ID to begin:", "")
-
-if not user_id:
-    st.warning("Please enter your user ID to continue.")
-    st.stop()
-
-USER_DATA_FILE = f"{user_id}_mood_log.csv"
 
 mood_input = st.text_input("How are you feeling today?", "")
 
@@ -149,7 +150,7 @@ with col2:
 if color_log:
     st.subheader("Your Mood History 🌈")
 
-    df = pd.read_csv(DATA_FILE)
+    df = pd.read_csv(USER_DATA_FILE)
     df["date"] = pd.to_datetime(df["date"])
     today_dt = pd.to_datetime(date.today())
 
