@@ -86,15 +86,36 @@ def plot_blended_gradient(color_list):
     ax.imshow(gradient)
     ax.axis("off")
     return fig
+    
+# ------------------- USER AUTH -------------------
+USERS = {
+    "eternity": "sunshine123",
+    "alice": "wonderland",
+    "bob": "builder123"
+}
 
-# ------------------- USER LOGIN -------------------
-st.sidebar.header("👤 User Login")
-user_id = st.sidebar.text_input("Enter your name or ID to begin:", "")
+def authenticate(username, password):
+    return USERS.get(username) == password
 
-if not user_id:
-    st.warning("Please enter your user ID to continue.")
+# ------------------- LOGIN PAGE -------------------
+if "logged_in" not in st.session_state:
+    st.session_state.logged_in = False
+
+if not st.session_state.logged_in:
+    st.title("🔐 Pixal Login")
+    username = st.text_input("Username")
+    password = st.text_input("Password", type="password")
+
+    if st.button("Login"):
+        if authenticate(username, password):
+            st.session_state.logged_in = True
+            st.session_state.user_id = username
+            st.success("Login successful!")
+            st.experimental_rerun()
+        else:
+            st.error("Invalid username or password.")
     st.stop()
-
+user_id = st.session_state.user_id
 USER_DATA_FILE = f"{user_id}_mood_log.csv"
 
 # ------------------- LOAD LOG -------------------
