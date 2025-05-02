@@ -88,8 +88,8 @@ def plot_blended_gradient(color_list):
     return fig
 
 # ------------------- LOAD LOG -------------------
-if os.path.exists(DATA_FILE):
-    df = pd.read_csv(DATA_FILE)
+if os.path.exists(USER_DATA_FILE):
+    df = pd.read_csv(USER_DATA_FILE)
     color_log = list(df.itertuples(index=False, name=None))
 else:
     df = pd.DataFrame(columns=["date", "color", "text"])
@@ -98,6 +98,15 @@ else:
 # ------------------- UI -------------------
 st.title("🎨 Pixal 2.0")
 st.subheader("Your mood, visualized as color 🌈")
+
+st.sidebar.header("👤 User Login")
+user_id = st.sidebar.text_input("Enter your name or ID to begin:", "")
+
+if not user_id:
+    st.warning("Please enter your user ID to continue.")
+    st.stop()
+
+USER_DATA_FILE = f"{user_id}_mood_log.csv"
 
 mood_input = st.text_input("How are you feeling today?", "")
 
@@ -113,7 +122,7 @@ if st.button("Generate Mood Color"):
         # Add to log
         color_log.append((today, varied, mood_input))
         df = pd.DataFrame(color_log, columns=["date", "color", "text"])
-        df.to_csv(DATA_FILE, index=False)
+        df.to_csv(USER_DATA_FILE, index=False)
 
         # Show quote + song
         resources = get_resources(emotion)
@@ -128,7 +137,7 @@ col1, col2 = st.columns([1, 2])
 with col1:
     if st.button("🔄 Reset Mood History"):
         df = pd.DataFrame(columns=["date", "color", "text"])
-        df.to_csv(DATA_FILE, index=False)
+        df.to_csv(USER_DATA_FILE, index=False)
         color_log = []
         st.success("Mood history reset. Refreshing...")
         st.experimental_rerun()
