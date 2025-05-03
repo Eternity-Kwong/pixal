@@ -11,7 +11,7 @@ import matplotlib.pyplot as plt
 from vaderSentiment.vaderSentiment import SentimentIntensityAnalyzer
 from io import BytesIO
 
-st.set_page_config(page_title="Pixal 2.0", layout="centered")
+st.set_page_config(page_title="Pixal", layout="centered")
 
 # ------------------- SETUP -------------------
 analyzer = SentimentIntensityAnalyzer()
@@ -84,7 +84,7 @@ if "logged_in" not in st.session_state:
     st.session_state.logged_in = False
 
 if not st.session_state.logged_in:
-    st.title("🔐 Welcome to Pixal 2.0")
+    st.title("🔐 Welcome to Pixal")
     auth_mode = st.radio("Choose an option:", ["Login", "Sign Up"])
     username = st.text_input("Username")
     password = st.text_input("Password", type="password")
@@ -118,7 +118,7 @@ else:
     df = pd.DataFrame(columns=["date", "color", "text"])
     color_log = []
 
-st.title("🎨 Pixal 2.0")
+st.title("🎨 Pixal")
 st.subheader("Your mood, visualized as color 🌈")
 mood_input = st.text_input("How are you feeling today?", "")
 
