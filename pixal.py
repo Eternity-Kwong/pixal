@@ -92,7 +92,10 @@ if not st.session_state.logged_in:
     if auth_mode == "Sign Up":
         if st.button("Sign Up"):
             if save_user(username, password):
-                st.success("Account created! You can log in now.")
+                st.success("Account created and logged in!")
+                st.session_state.logged_in = True
+                st.session_state.user_id = username
+                st.rerun()
             else:
                 st.error("Username already exists.")
     else:
