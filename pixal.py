@@ -132,7 +132,7 @@ st.subheader("Your mood, visualized as color 🌈")
 
 mood_input = st.text_input("How are you feeling today?", "")
 
-if st.button("Generate Mood Color"):
+if st.button("🎨 Color My Mood"):
     if mood_input:
         base_color, emotion = mood_to_color(mood_input)
         varied = vary_color(base_color)
