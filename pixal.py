@@ -125,7 +125,7 @@ if st.button("🎨 Color My Mood"):
     if mood_input:
         color, emotion = mood_to_color(mood_input)
         varied = vary_color(color)
-               st.markdown(f"### Your mood is: **{emotion}**")
+            st.markdown(f"### Your mood is: **{emotion}**")
         st.markdown("#### 🌸 You can keep the color we chose, or pick your own:")
 
         chosen_color = st.color_picker("🎨 Select Your Color", varied)
