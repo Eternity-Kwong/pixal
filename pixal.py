@@ -146,7 +146,6 @@ if st.button("🎨 Color My Mood"):
         st.markdown(f"**Emotion detected:** {emotion}")
         st.color_picker("Mood Color", varied, disabled=True)
         # Save this final color
-        color_log.append((today, chosen_color, mood_input))
         pd.DataFrame(color_log, columns=["date", "color", "text"]).to_csv(USER_DATA_FILE, index=False)
 
         color_log.append((today, varied, mood_input))
