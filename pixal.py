@@ -91,9 +91,10 @@ if not st.session_state.logged_in:
     username = st.text_input("Username")
     password = st.text_input("Password", type="password")
     
+    # The button is *always* visible
     if st.button("Sign Up"):
+        # Only check inputs when clicked
         if username and password:
-            # proceed with saving user
             if save_user(username, password):
                 st.success("Account created and logged in!")
                 st.session_state.logged_in = True
@@ -103,7 +104,6 @@ if not st.session_state.logged_in:
                 st.error("Username already exists.")
         else:
             st.error("You have to enter a username and password")
-
     st.stop()
 
 # ------------------- MAIN APP -------------------
