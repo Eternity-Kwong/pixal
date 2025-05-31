@@ -28,16 +28,18 @@ def vary_color(hex_color):
 
 def mood_to_color(mood_text):
     score = analyzer.polarity_scores(mood_text)["compound"]
+
+    # Define aesthetic green-to-red gradient stops
     if score >= 0.6:
-        return "#70e000", "Very Positive 😄"
+        return "#b7e4c7", "Very Positive 😄"      # Soft sage green
     elif score >= 0.2:
-        return "#a3f07c", "Positive 🙂"
+        return "#d8f3dc", "Positive 🙂"           # Mint cream
     elif score > -0.2:
-        return "#f3f3a1", "Neutral 😐"
+        return "#fefae0", "Neutral 😐"            # Warm beige
     elif score > -0.6:
-        return "#f38e7f", "Negative 😕"
+        return "#fbc4ab", "Negative 😕"           # Soft coral
     else:
-        return "#d00000", "Very Negative 😔"
+        return "#f4978e", "Very Negative 😔"      # Muted terracotta red
 
 def get_resources(emotion):
     return {
@@ -121,9 +123,16 @@ if st.button("🎨 Color My Mood"):
     if mood_input:
         color, emotion = mood_to_color(mood_input)
         varied = vary_color(color)
-        st.markdown(f"### Your color for today is: `{varied}`")
-        st.markdown(f"**Emotion detected:** {emotion}")
-        st.color_picker("Mood Color", varied, disabled=True)
+               st.markdown(f"### Your mood is: **{emotion}**")
+        st.markdown("#### 🌸 You can keep the color we chose, or pick your own:")
+
+        chosen_color = st.color_picker("🎨 Select Your Color", varied)
+        st.markdown(f"#### Final Color: `{chosen_color}`")
+
+        # Save this final color
+        color_log.append((today, chosen_color, mood_input))
+        pd.DataFrame(color_log, columns=["date", "color", "text"]).to_csv(USER_DATA_FILE, index=False)
+
         color_log.append((today, varied, mood_input))
         pd.DataFrame(color_log, columns=["date", "color", "text"]).to_csv(USER_DATA_FILE, index=False)
         r = get_resources(emotion)
