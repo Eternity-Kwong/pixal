@@ -90,21 +90,20 @@ if not st.session_state.logged_in:
     auth_mode = st.radio("Choose an option:", ["Login", "Sign Up"])
     username = st.text_input("Username")
     password = st.text_input("Password", type="password")
-
-    if auth_mode == "Sign Up":
-        if st.button("Sign Up"):
-            if username and password:
-                if save_user(username, password):
-                    st.success("Account created and logged in!")
-                    st.session_state.logged_in = True
-                    st.session_state.user_id = username
-                    st.rerun()
-                else:
-                    st.error("Username already exists.")
+    
+    if st.button("Sign Up"):
+        if username and password:
+            # proceed with saving user
+            if save_user(username, password):
+                st.success("Account created and logged in!")
+                st.session_state.logged_in = True
+                st.session_state.user_id = username
+                st.experimental_rerun()
             else:
-                st.warning("Please enter both a username and password.")
-    else:
-        st.error("Please enter a username and password.")
+                st.error("Username already exists.")
+        else:
+            st.error("You have to enter a username and password")
+
     st.stop()
 
 # ------------------- MAIN APP -------------------
