@@ -82,33 +82,31 @@ def authenticate(username, password):
     return ((users["username"] == username) & (users["password"] == password)).any()
 
 # ------------------- LOGIN/SIGNUP -------------------
-if "logged_in" not in st.session_state:
-    st.session_state.logged_in = False
-
 def do_login(username, password):
     if username and password:
         if authenticate(username, password):
             st.session_state.logged_in = True
             st.session_state.user_id = username
-            st.experimental_rerun()
+            # NO st.experimental_rerun() here!
         else:
-            st.error("Invalid username or password.")
+            st.session_state.login_error = "Invalid username or password."
     else:
-        st.error("Please enter a username and password.")
+        st.session_state.login_error = "Please enter a username and password."
 
 def do_signup(username, password):
     if username and password:
         if save_user(username, password):
-            st.success("Account created and logged in!")
             st.session_state.logged_in = True
             st.session_state.user_id = username
-            st.experimental_rerun()
         else:
-            st.error("Username already exists.")
+            st.session_state.signup_error = "Username already exists."
     else:
-        st.error("Please enter a username and password.")
+        st.session_state.signup_error = "Please enter a username and password."
 
-if not st.session_state.get("logged_in", False):
+if "logged_in" not in st.session_state:
+    st.session_state.logged_in = False
+
+if not st.session_state.logged_in:
     st.title("🔐 Welcome to Pixal")
     auth_mode = st.radio("Choose an option:", ["Login", "Sign Up"])
     username = st.text_input("Username")
@@ -116,8 +114,14 @@ if not st.session_state.get("logged_in", False):
 
     if auth_mode == "Login":
         st.button("Login", on_click=do_login, args=(username, password))
+        if st.session_state.get("login_error"):
+            st.error(st.session_state.login_error)
+            st.session_state.login_error = None
     else:
         st.button("Sign Up", on_click=do_signup, args=(username, password))
+        if st.session_state.get("signup_error"):
+            st.error(st.session_state.signup_error)
+            st.session_state.signup_error = None
 
     st.stop()
 # ------------------- MAIN APP -------------------
