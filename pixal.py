@@ -85,39 +85,41 @@ def authenticate(username, password):
 if "logged_in" not in st.session_state:
     st.session_state.logged_in = False
 
-if not st.session_state.logged_in:
+def do_login(username, password):
+    if username and password:
+        if authenticate(username, password):
+            st.session_state.logged_in = True
+            st.session_state.user_id = username
+            st.experimental_rerun()
+        else:
+            st.error("Invalid username or password.")
+    else:
+        st.error("Please enter a username and password.")
+
+def do_signup(username, password):
+    if username and password:
+        if save_user(username, password):
+            st.success("Account created and logged in!")
+            st.session_state.logged_in = True
+            st.session_state.user_id = username
+            st.experimental_rerun()
+        else:
+            st.error("Username already exists.")
+    else:
+        st.error("Please enter a username and password.")
+
+if not st.session_state.get("logged_in", False):
     st.title("🔐 Welcome to Pixal")
     auth_mode = st.radio("Choose an option:", ["Login", "Sign Up"])
     username = st.text_input("Username")
     password = st.text_input("Password", type="password")
 
-    if auth_mode == "Sign Up":
-        if st.button("Sign Up"):
-            if username and password:
-                if save_user(username, password):
-                    st.success("Account created and logged in!")
-                    st.session_state.logged_in = True
-                    st.session_state.user_id = username
-                    st.experimental_rerun()
-                    st.stop()  # <- Add this to stop further execution
-                else:
-                    st.error("Username already exists.")
-            else:
-                st.error("Please enter a username and password.")
-    else:  # Login mode
-        if st.button("Login"):
-            if username and password:
-                if authenticate(username, password):
-                    st.session_state.logged_in = True
-                    st.session_state.user_id = username
-                    st.experimental_rerun()
-                    st.stop()  # <- Add this here too
-                else:
-                    st.error("Invalid username or password.")
-            else:
-                st.error("Please enter a username and password.")
-    st.stop()
+    if auth_mode == "Login":
+        st.button("Login", on_click=do_login, args=(username, password))
+    else:
+        st.button("Sign Up", on_click=do_signup, args=(username, password))
 
+    st.stop()
 # ------------------- MAIN APP -------------------
 user_id = st.session_state.user_id
 USER_DATA_FILE = f"{user_id}_mood_log.csv"
