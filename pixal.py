@@ -93,7 +93,7 @@ if not st.session_state.logged_in:
 
     if auth_mode == "Sign Up":
        if st.button("Sign Up"):
-    if username and password:
+        if username and password:
         if save_user(username, password):
             st.session_state.logged_in = True
             st.session_state.user_id = username
