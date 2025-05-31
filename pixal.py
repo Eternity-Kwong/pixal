@@ -92,17 +92,17 @@ if not st.session_state.logged_in:
     password = st.text_input("Password", type="password")
 
     if auth_mode == "Sign Up":
-    if st.button("Sign Up"):
-        if username and password:
-            if save_user(username, password):
-                st.success("Account created and logged in!")
-                st.session_state.logged_in = True
-                st.session_state.user_id = username
-                st.rerun()
+        if st.button("Sign Up"):
+            if username and password:
+                if save_user(username, password):
+                    st.success("Account created and logged in!")
+                    st.session_state.logged_in = True
+                    st.session_state.user_id = username
+                    st.rerun()
+                else:
+                    st.error("Username already exists.")
             else:
-                st.error("Username already exists.")
-        else:
-            st.warning("Please enter both a username and password.")
+                st.warning("Please enter both a username and password.")
     else:
         st.error("Please enter a username and password.")
     st.stop()
