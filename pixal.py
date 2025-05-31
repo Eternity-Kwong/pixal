@@ -102,7 +102,7 @@ if not st.session_state.logged_in:
                 else:
                     st.error("Username already exists.")
             else:
-                st.error("You have to enter a username and password")
+                st.error("Please enter a username and password.")
     else:  # Login mode
         if st.button("Login"):
             if username and password:
@@ -113,7 +113,8 @@ if not st.session_state.logged_in:
                 else:
                     st.error("Invalid username or password.")
             else:
-                st.error("You have to enter a username and password")
+                st.error("Please enter a username and password.")
+
     st.stop()
 
 # ------------------- MAIN APP -------------------
