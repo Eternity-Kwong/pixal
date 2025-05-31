@@ -99,6 +99,7 @@ if not st.session_state.logged_in:
                     st.session_state.logged_in = True
                     st.session_state.user_id = username
                     st.experimental_rerun()
+                    st.stop()  # <- Add this to stop further execution
                 else:
                     st.error("Username already exists.")
             else:
@@ -110,11 +111,11 @@ if not st.session_state.logged_in:
                     st.session_state.logged_in = True
                     st.session_state.user_id = username
                     st.experimental_rerun()
+                    st.stop()  # <- Add this here too
                 else:
                     st.error("Invalid username or password.")
             else:
                 st.error("Please enter a username and password.")
-
     st.stop()
 
 # ------------------- MAIN APP -------------------
